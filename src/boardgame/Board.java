@@ -36,4 +36,14 @@ public class Board {
 		this.columns = columns;
 	}
 	
+	//método que vai retornar matriz pieces na linha row e coluna column
+	public Piece piece(int row, int column) {
+		return pieces[row][column];
+	}
+	
+	//sobrecarga do método anterior. Retornar peça pela posição
+	public Piece piece(Position position) {
+		return pieces[position.getrow()][position.getColumn()];
+	}
+	
 }
