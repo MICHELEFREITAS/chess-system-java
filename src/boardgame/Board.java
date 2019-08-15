@@ -46,4 +46,11 @@ public class Board {
 		return pieces[position.getrow()][position.getColumn()];
 	}
 	
+	public void placePiece(Piece piece, Position position) {
+		//pega matriz instanciada em cima, na posição dada e atribui a ela a peça informada
+		pieces[position.getrow()][position.getColumn()] = piece;
+		//acesso diretamente position do Piece que está protect, pois Board pertence ao mesmo pacote - boardgame
+		piece.position = position;
+	}
+	
 }
