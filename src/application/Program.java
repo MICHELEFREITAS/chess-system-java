@@ -1,7 +1,9 @@
 package application;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import chess.ChessException;
 import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.ChessPosition;
@@ -17,20 +19,33 @@ public class Program {
 		
 		
 		while(true) {
-			//Recebe matriz peças da partida. Imprimi tabuleiro
-			UI.printBoard(chessMatch.getPieces());
-			
-			System.out.println();
-			
-			//informar posição origem
-			System.out.println("Source: ");
-			ChessPosition source = UI.readChessPosition(sc);
-			
-			//informar posição destino
-			System.out.println("Target: ");
-			ChessPosition target = UI.readChessPosition(sc);
-			
-			ChessPiece capturePiece = chessMatch.performChessMove(source, target);
+			try {
+				UI.clearScreen();
+				//Recebe matriz peças da partida. Imprimi tabuleiro
+				UI.printBoard(chessMatch.getPieces());
+				
+				System.out.println();
+				
+				//informar posição origem
+				System.out.println("Source: ");
+				ChessPosition source = UI.readChessPosition(sc);
+				
+				//informar posição destino
+				System.out.println("Target: ");
+				ChessPosition target = UI.readChessPosition(sc);
+				
+				ChessPiece capturePiece = chessMatch.performChessMove(source, target);
+			}
+			catch(ChessException e) {
+				System.out.println(e.getMessage());
+				//programa aguarda pressionar enter
+				sc.nextLine();
+			}
+			catch(InputMismatchException e) {
+				System.out.println(e.getMessage());
+				//programa aguarda pressionar enter
+				sc.nextLine();
+			}
 			
 		}
 	}
