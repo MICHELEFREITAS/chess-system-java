@@ -1,16 +1,38 @@
 package application;
 
+import java.util.Scanner;
+
 import chess.ChessMatch;
+import chess.ChessPiece;
+import chess.ChessPosition;
 
 public class Program {
 
 	public static void main(String[] args) {
 		
+		Scanner sc = new Scanner(System.in);
+		
 		//Instanciando uma partida de xadrez e imprimindo o tabuleiro
 		ChessMatch chessMatch = new ChessMatch();
 		
-		//Recebe matriz peças da partida
-		UI.printBoard(chessMatch.getPieces());
+		
+		while(true) {
+			//Recebe matriz peças da partida. Imprimi tabuleiro
+			UI.printBoard(chessMatch.getPieces());
+			
+			System.out.println();
+			
+			//informar posição origem
+			System.out.println("Source: ");
+			ChessPosition source = UI.readChessPosition(sc);
+			
+			//informar posição destino
+			System.out.println("Target: ");
+			ChessPosition target = UI.readChessPosition(sc);
+			
+			ChessPiece capturePiece = chessMatch.performChessMove(source, target);
+			
+		}
 	}
 
 }
