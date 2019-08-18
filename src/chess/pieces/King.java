@@ -17,4 +17,12 @@ public class King extends ChessPiece{
 		return "K";
 	}
 
+	@Override
+	public boolean[][] possibleMoves() {
+		//boolean inicia como falso
+		//matriz com mesmo número linhas e colunas do tabuleiro 
+		boolean[][] mat = new boolean [getBoard().getRows()][getBoard().getColumns()];
+		return mat;
+	}
+
 }
