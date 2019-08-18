@@ -21,7 +21,7 @@ public abstract class Piece {
 	public abstract boolean[][] possibleMoves();
 	
 	//método concreto utilizando método abstrato
-	public boolean possibleMove(Position positon) {
+	public boolean possibleMove(Position position) {
 		return possibleMoves()[position.getrow()][position.getColumn()];
 		
 	}
