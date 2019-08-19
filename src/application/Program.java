@@ -22,7 +22,7 @@ public class Program {
 			try {
 				UI.clearScreen();
 				//Recebe matriz peças da partida. Imprimi tabuleiro
-				UI.printBoard(chessMatch.getPieces());
+				UI.printMatch(chessMatch);
 				
 				System.out.println();
 				
