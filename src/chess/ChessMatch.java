@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
@@ -14,6 +17,11 @@ public class ChessMatch {
 	//jogador atual
 	private Color currentPlayer;
 	private Board board;
+	
+	//lista de peças no tabuleiro
+	private List<Piece> piecesOnTheBoard = new ArrayList<>();
+	//lista peças capturadas
+	private List<Piece> capturedPieces = new ArrayList<>();
 	
 	public ChessMatch() {
 		//tabuleiro 8x8
@@ -67,12 +75,12 @@ public class ChessMatch {
 		validateTargetPosition(source, target);
 		
 		//makeMove oper. mover peça
-		Piece capturePiece = makeMove(source, target);
+		Piece capturedPiece = makeMove(source, target);
 		
 		nextTurn();
 		
 		//retorna a peça capturada
-		return (ChessPiece)capturePiece;
+		return (ChessPiece)capturedPiece;
 		
 	}
 	
@@ -82,13 +90,20 @@ public class ChessMatch {
 		Piece p = board.removePiece(source);
 		
 		//remover peça posição destino que será a peça capturada
-		Piece capturePiece = board.removePiece(target);
+		Piece capturedPiece = board.removePiece(target);
 		
 		//colocar posição de origem na posição de destino
 		board.placePiece(p, target);
 		
-		return capturePiece;
+		if(capturedPiece != null) {
+			//retira peça da lista de peças do tabuleiro
+			piecesOnTheBoard.remove(capturedPiece);
+			//adiciona na lista de peças capturadas
+			capturedPieces.add(capturedPiece);
+			
+		}
 		
+		return capturedPiece;
 		
 	}
 	
@@ -126,7 +141,10 @@ public class ChessMatch {
 	
 	//recebe coordenadas do xadrez
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
+		//colocar peça no tabuleiro
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
+		//colocar peça na lista de peças no tabuleiro
+		piecesOnTheBoard.add(piece);
 	}
 	
 	//método responsável por iniciar a partida colocando peças no tabuleiro
