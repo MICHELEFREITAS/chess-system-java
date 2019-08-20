@@ -25,6 +25,7 @@ public class ChessMatch {
 	private Board board;
 	private boolean check;
 	private boolean checkMate;
+	private ChessPiece enPassantVunerable;
 	
 	//lista de peças no tabuleiro
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
@@ -54,6 +55,10 @@ public class ChessMatch {
 	
 	public boolean getCheckMate() {
 		return checkMate;
+	}
+	
+	public ChessPiece getEnPassantVunerable() {
+		return enPassantVunerable;
 	}
 	
 	//método retorna matriz peças xadrez correspondentes a partida
@@ -100,6 +105,9 @@ public class ChessMatch {
 			throw new ChessException("You can't put yourself in check");
 		}
 		
+		//peça que moveu peça colocada destino(target)
+		ChessPiece movedPiece = (ChessPiece)board.piece(target);
+		
 		//oponente ficou em check - true, se não (:) não está em check
 		check = (testCheck(opponent(currentPlayer))) ? true : false;
 		
@@ -112,6 +120,14 @@ public class ChessMatch {
 			nextTurn();
 		}
 				
+		//specialmove en passant
+		//se peça movida for peão e diferença de linhas foi 2 para mais ou menos 
+		if(movedPiece instanceof Pawn && (target.getrow() == source.getrow()-2 || (target.getrow() == source.getrow()+2))) {
+			enPassantVunerable = movedPiece;
+		}
+		else {
+			enPassantVunerable = null;
+		}
 		
 		//retorna a peça capturada
 		return (ChessPiece)capturedPiece;
@@ -160,6 +176,25 @@ public class ChessMatch {
 			rook.increaseMoveCount();//incrementa quant de movimentos da torre
 		}
 		
+		//specialmove en passant
+		//peão só anda na diagonal para casa vazia se for en passant
+		if(p instanceof Pawn) {
+			//peão andou na diagonal e não capturou peça, então é en passant
+			if(source.getColumn() != target.getColumn() && capturedPiece == null) {
+				Position pawnPosition;
+				if(p.getColor() == Color.WHITE) {
+					//posição do peão que tem que ser capturado, linha mais 1(peça debaixo)
+					pawnPosition = new Position(target.getrow() + 1, target.getColumn());
+				}
+				else {
+					pawnPosition = new Position(target.getrow() -1, target.getColumn());
+				}
+				capturedPiece = board.removePiece(pawnPosition);//remove peão do tabuleiro
+				capturedPieces.add(capturedPiece); //adiciona na lista das peças capturadas
+				piecesOnTheBoard.remove(capturedPiece);//remove peça capturada das peças do tabuleiro
+			}
+		}
+		
 		return capturedPiece;
 		
 	}
@@ -202,6 +237,25 @@ public class ChessMatch {
 			ChessPiece rook = (ChessPiece)board.removePiece(targetT);//retira torre posição destino
 			board.placePiece(rook, sourceT);//coloca torre posição origem
 			rook.decreaseMoveCount();//decrementar quant de movimentos da torre
+		}
+				
+		//DESFAZER jogada - specialmove en passant
+		//peão só anda na diagonal para casa vazia se for en passant
+		if(p instanceof Pawn) {
+			//peão andou na diagonal e peça capturada é en passant
+			if(source.getColumn() != target.getColumn() && capturedPiece == enPassantVunerable) {
+				//tira peça do lugar errado dela
+				ChessPiece pawn = (ChessPiece)board.removePiece(target);
+				Position pawnPosition;
+				if(p.getColor() == Color.WHITE) {
+					//se peça capturada por branca devolver peça para linha 3 
+					pawnPosition = new Position(3, target.getColumn());
+				}
+				else {//peça que capturou foi a preta. Devolve branca para linha 4
+					pawnPosition = new Position(4, target.getColumn());
+				}
+				board.placePiece(pawn, pawnPosition);
+			}
 		}
 		
 	}
@@ -327,14 +381,14 @@ public class ChessMatch {
         placeNewPiece('f', 1, new Bishop(board, Color.WHITE));
         placeNewPiece('g', 1, new Knight(board, Color.WHITE));
         placeNewPiece('h', 1, new Rook(board, Color.WHITE));
-        placeNewPiece('a', 2, new Pawn(board, Color.WHITE));
-        placeNewPiece('b', 2, new Pawn(board, Color.WHITE));
-        placeNewPiece('c', 2, new Pawn(board, Color.WHITE));
-        placeNewPiece('d', 2, new Pawn(board, Color.WHITE));
-        placeNewPiece('e', 2, new Pawn(board, Color.WHITE));
-        placeNewPiece('f', 2, new Pawn(board, Color.WHITE));
-        placeNewPiece('g', 2, new Pawn(board, Color.WHITE));
-        placeNewPiece('h', 2, new Pawn(board, Color.WHITE));
+        placeNewPiece('a', 2, new Pawn(board, Color.WHITE, this));//this é referência da partida
+        placeNewPiece('b', 2, new Pawn(board, Color.WHITE, this));
+        placeNewPiece('c', 2, new Pawn(board, Color.WHITE, this));
+        placeNewPiece('d', 2, new Pawn(board, Color.WHITE, this));
+        placeNewPiece('e', 2, new Pawn(board, Color.WHITE, this));
+        placeNewPiece('f', 2, new Pawn(board, Color.WHITE, this));
+        placeNewPiece('g', 2, new Pawn(board, Color.WHITE, this));
+        placeNewPiece('h', 2, new Pawn(board, Color.WHITE, this));
 
         placeNewPiece('a', 8, new Rook(board, Color.BLACK));
         placeNewPiece('b', 8, new Knight(board, Color.BLACK));
@@ -344,13 +398,13 @@ public class ChessMatch {
         placeNewPiece('f', 8, new Bishop(board, Color.BLACK));
         placeNewPiece('g', 8, new Knight(board, Color.BLACK));
         placeNewPiece('h', 8, new Rook(board, Color.BLACK));
-        placeNewPiece('a', 7, new Pawn(board, Color.BLACK));
-        placeNewPiece('b', 7, new Pawn(board, Color.BLACK));
-        placeNewPiece('c', 7, new Pawn(board, Color.BLACK));
-        placeNewPiece('d', 7, new Pawn(board, Color.BLACK));
-        placeNewPiece('e', 7, new Pawn(board, Color.BLACK));
-        placeNewPiece('f', 7, new Pawn(board, Color.BLACK));
-        placeNewPiece('g', 7, new Pawn(board, Color.BLACK));
-        placeNewPiece('h', 7, new Pawn(board, Color.BLACK));
+        placeNewPiece('a', 7, new Pawn(board, Color.BLACK, this));
+        placeNewPiece('b', 7, new Pawn(board, Color.BLACK, this));
+        placeNewPiece('c', 7, new Pawn(board, Color.BLACK, this));
+        placeNewPiece('d', 7, new Pawn(board, Color.BLACK, this));
+        placeNewPiece('e', 7, new Pawn(board, Color.BLACK, this));
+        placeNewPiece('f', 7, new Pawn(board, Color.BLACK, this));
+        placeNewPiece('g', 7, new Pawn(board, Color.BLACK, this));
+        placeNewPiece('h', 7, new Pawn(board, Color.BLACK, this));
 	}
 }

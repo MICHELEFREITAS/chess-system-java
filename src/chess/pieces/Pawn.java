@@ -2,14 +2,18 @@ package chess.pieces;
 
 import boardgame.Board;
 import boardgame.Position;
+import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.Color;
 
 //Peça peão do xadrez
 public class Pawn extends ChessPiece{
+	
+	private ChessMatch chessMatch;
 
-	public Pawn(Board board, Color color) {
+	public Pawn(Board board, Color color, ChessMatch chessMatch) {
 		super(board, color);
+		this.chessMatch = chessMatch;
 		
 	}
 
@@ -49,6 +53,23 @@ public class Pawn extends ChessPiece{
 			if(getBoard().positionExists(p) && isThereOpponentPiece(p)) {
 				mat[p.getrow()][p.getColumn()] = true;
 			}
+			
+			//specialmove en passant white
+			//testa se a posição da peça está na linha 3
+			if(position.getrow()==3) {
+				Position left = new Position(position.getrow(), position.getColumn() -1);
+				//se a posição da esquerda existe, se tem uma peça lá que é oponente e se a peça que está lá é vunerável a tomar o en passant 
+				if(getBoard().positionExists(left) && isThereOpponentPiece(left) && getBoard().piece(left) == chessMatch.getEnPassantVunerable()) {
+					//peão captura peça e move 1 linha após ela
+					mat[left.getrow() -1][left.getColumn()] = true;
+				}
+				Position rigth = new Position(position.getrow(), position.getColumn() +1);
+				//se a posição da direita existe, se tem uma peça lá que é oponente e se a peça que está lá é vunerável a tomar o en passant 
+				if(getBoard().positionExists(rigth) && isThereOpponentPiece(rigth) && getBoard().piece(rigth) == chessMatch.getEnPassantVunerable()) {
+					//peão captura peça e move 1 linha após ela
+					mat[rigth.getrow() -1][rigth.getColumn()] = true;
+				}
+			}			
 		}
 		//peça preta
 		else {
@@ -80,6 +101,23 @@ public class Pawn extends ChessPiece{
 			//se a posição existe e se tem peça adversária lá
 			if(getBoard().positionExists(p) && isThereOpponentPiece(p)) {
 				mat[p.getrow()][p.getColumn()] = true;
+			}
+			
+			//specialmove en passant black
+			//testa se a posição da peça está na linha 3
+			if(position.getrow()==4) {
+				Position left = new Position(position.getrow(), position.getColumn() -1);
+				//se a posição da esquerda existe, se tem uma peça lá que é oponente e se a peça que está lá é vunerável a tomar o en passant 
+				if(getBoard().positionExists(left) && isThereOpponentPiece(left) && getBoard().piece(left) == chessMatch.getEnPassantVunerable()) {
+					//peão captura peça e move 1 linha após ela
+					mat[left.getrow() +1][left.getColumn()] = true;
+				}
+				Position rigth = new Position(position.getrow(), position.getColumn() +1);
+				//se a posição da direita existe, se tem uma peça lá que é oponente e se a peça que está lá é vunerável a tomar o en passant 
+				if(getBoard().positionExists(rigth) && isThereOpponentPiece(rigth) && getBoard().piece(rigth) == chessMatch.getEnPassantVunerable()) {
+					//peão captura peça e move 1 linha após ela
+					mat[rigth.getrow() +1][rigth.getColumn()] = true;
+				}
 			}
 		}
 		return mat;
