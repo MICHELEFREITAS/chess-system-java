@@ -22,8 +22,8 @@ public class Program {
 		
 		List<ChessPiece> captured = new ArrayList<>();
 		
-		
-		while(true) {
+		//enquanto partida não estiver com CheckMate
+		while(!chessMatch.getCheckMate()) {
 			try {
 				UI.clearScreen();
 				//Recebe matriz peças da partida. Imprimi tabuleiro
@@ -64,6 +64,10 @@ public class Program {
 			}
 			
 		}
+		//limpa tela
+		UI.clearScreen();
+		//imprimir partida finalizada
+		UI.printMatch(chessMatch, captured);
 	}
 
 }

@@ -65,12 +65,22 @@ public class UI {
 		printCapturedPieces(captured);
 		System.out.println();
 		System.out.println("Turn: " + chessMatch.getTurn());
-		//aguardando jogador da cor...
-		System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());
 		
-		//partida em check
-		if(chessMatch.getCheck()) {
-			System.out.println("CHECK!");
+		//testar se não esté me checkMate
+		if(!chessMatch.getCheckMate()){
+			//aguardando jogador da cor...
+			System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());
+			
+			//partida em check
+			if(chessMatch.getCheck()) {
+				System.out.println("CHECK!");
+			}
+		}
+		//estiver em checkMate
+		else {
+			System.out.println("CHECKMATE!");
+			System.out.println("Winner: " + chessMatch.getCurrentPlayer());
+			
 		}
 		
 	}
@@ -138,20 +148,20 @@ public class UI {
 	//imprimir lista de peças capturadas do jogo todo
 	private static void printCapturedPieces(List<ChessPiece> captured) {
 		//filtra da lista todas peças cuja cor é branca
-		List<ChessPiece> white = captured.stream().filter(x -> x.getColor() == Color.WHITE).collect(Collectors.toList());
+		List<ChessPiece> white = captured.stream().filter(x -> x.getColor() == Color.WHITE).collect(Collectors.toList());;
 		List<ChessPiece> black = captured.stream().filter(x -> x.getColor() == Color.BLACK).collect(Collectors.toList());
 		System.out.println("Captured pieces:");
 		System.out.print("White: ");
-		System.out.println(ANSI_WHITE);
+		System.out.print(ANSI_WHITE);
 		//padrão imprimir array 
-		System.out.print(Arrays.toString(white.toArray()));
-		System.out.println(ANSI_RESET);
+		System.out.println(Arrays.toString(white.toArray()));
+		System.out.print(ANSI_RESET);
 		
 		System.out.print("Black: ");
-		System.out.println(ANSI_YELLOW);
+		System.out.print(ANSI_YELLOW);
 		//padrão imprimir array 
-		System.out.print(Arrays.toString(black.toArray()));
-		System.out.println(ANSI_RESET);
+		System.out.println(Arrays.toString(black.toArray()));
+		System.out.print(ANSI_RESET);
 
 	}
 }
