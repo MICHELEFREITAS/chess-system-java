@@ -62,7 +62,7 @@ public class Pawn extends ChessPiece{
 			//2 linhas a frente
 			p.setValues(position.getrow() +2, position.getColumn());
 			//ver se a primeira casa está livre para o peão mover duas casas na primeira jogada
-			Position p2 = new Position(position.getrow() -1, position.getColumn());
+			Position p2 = new Position(position.getrow() +1, position.getColumn());
 			
 			//se posição existe, se não existe peça na posição p e depois  p2 e MoveCount for 0 (primeira jogada)
 			if(getBoard().positionExists(p) && !getBoard().thereIsAPiece(p) && getBoard().positionExists(p2) && !getBoard().thereIsAPiece(p2) && getMoveCount()==0) {
