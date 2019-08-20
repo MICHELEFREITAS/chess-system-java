@@ -118,7 +118,10 @@ public class ChessMatch {
 	//realizar movimento
 	private Piece makeMove(Position source, Position target) {
 		//retira peça posição origem
-		Piece p = board.removePiece(source);
+		ChessPiece p = (ChessPiece)board.removePiece(source);
+		
+		//incrementar quant. movimento da peça
+		p.increaseMoveCount();
 		
 		//remover peça posição destino que será a peça capturada
 		Piece capturedPiece = board.removePiece(target);
@@ -141,7 +144,11 @@ public class ChessMatch {
 	//desfazer o movimento da peça /jogada
 	private void undoMove(Position source, Position target, Piece capturedPiece) {
 		//tirar peça que foi movida para destino
-		Piece p = board.removePiece(target);
+		ChessPiece p = (ChessPiece)board.removePiece(target);
+		
+		//decrementar quant. mov. dessa peça
+		p.decreaseMoveCount();
+		
 		//coloca peça posição origem
 		board.placePiece(p, source);
 		
@@ -229,7 +236,7 @@ public class ChessMatch {
 		//pegar todas peças da cor passada como parâmetro
 		List<Piece> list = piecesOnTheBoard.stream().filter(x -> ((ChessPiece)x).getColor() == color).collect(Collectors.toList());
 		
-		for(Piece p:list) {
+		for (Piece p : list) {
 			//mov. possível peça p
 			boolean[][] mat = p.possibleMoves();
 			for(int i=0; i<board.getRows(); i++) {
