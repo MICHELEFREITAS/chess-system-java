@@ -33,8 +33,8 @@ public class ChessPosition {
 	}
 	
 	protected static ChessPosition fromPosition(Position position) {
-		//fórmula inversa do Position. A linha caracter 'a' - position...
-		return new ChessPosition((char)('a' - position.getColumn()), 8 - position.getrow());
+		//fórmula inversa do Position. A linha caracter 'a' + coluna da matriz
+		return new ChessPosition((char)('a' + position.getColumn()), 8 - position.getrow());
 	}
 	
 	//imprimir linha coluna na ordem a1, a2, b1...

@@ -1,11 +1,11 @@
 package application;
 
+
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
-
 import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.ChessPosition;
@@ -67,6 +67,11 @@ public class UI {
 		System.out.println("Turn: " + chessMatch.getTurn());
 		//aguardando jogador da cor...
 		System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());
+		
+		//partida em check
+		if(chessMatch.getCheck()) {
+			System.out.println("CHECK!");
+		}
 		
 	}
 	
@@ -134,9 +139,7 @@ public class UI {
 	private static void printCapturedPieces(List<ChessPiece> captured) {
 		//filtra da lista todas peças cuja cor é branca
 		List<ChessPiece> white = captured.stream().filter(x -> x.getColor() == Color.WHITE).collect(Collectors.toList());
-		
 		List<ChessPiece> black = captured.stream().filter(x -> x.getColor() == Color.BLACK).collect(Collectors.toList());
-	
 		System.out.println("Captured pieces:");
 		System.out.print("White: ");
 		System.out.println(ANSI_WHITE);
