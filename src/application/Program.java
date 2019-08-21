@@ -20,7 +20,7 @@ public class Program {
 		//Instanciando uma partida de xadrez e imprimindo o tabuleiro
 		ChessMatch chessMatch = new ChessMatch();
 		
-		List<ChessPiece> captured = new ArrayList<>();
+		List<ChessPiece> captured = new ArrayList<>(); 
 		
 		//enquanto partida não estiver com CheckMate
 		while(!chessMatch.getCheckMate()) {
@@ -50,6 +50,14 @@ public class Program {
 				if(capturedPiece != null) {
 					//adiciona peça na lista peças caputuradas
 					captured.add(capturedPiece);
+				}
+				
+				if(chessMatch.getPromoted() != null) {
+					//usuário escolhe a peça promoção
+					System.out.println("Enter peace for promotion(B/N/R/Q): ");
+					String type = sc.nextLine();
+					chessMatch.replacePromotedPiece(type);
+					
 				}
 			}
 			catch(ChessException e) {
